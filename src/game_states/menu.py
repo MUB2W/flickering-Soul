@@ -1,4 +1,4 @@
-from src.config import WID, HIT, WIN, BLACK, WHITE, CLOCK, FPS
+from src.config import WID, HIT, WIN, BLACK, WHITE, CLOCK, FPS, GRAY
 import pygame as pg
 import sys
 from src.tools import Button
@@ -6,7 +6,7 @@ from src.tools import Button
 # Main function 
 def main_menu():
     # Initialize
-    play_btn = Button(WID/2 - 112, HIT/2 - 62, 224, 124, "PLAY", 45, WHITE, (0, 150, 255), (0, 122, 204))
+    play_btn =Button(WID/2, HIT/2, 224, 124, "PLAY", BLACK, 44, WHITE, BLACK)
 
     while True:
         for event in pg.event.get():
@@ -14,19 +14,12 @@ def main_menu():
                 pg.quit()
                 sys.exit()
             
-            # Add ESC key to exit
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    pg.quit()
-                    sys.exit()
-
-            # Change scenes if button is clicked
+            # Change scene
             if play_btn.is_clicked(event):
-                print("PLAY button clicked!")
-
-
+                pass
+            
         # Bg
-        WIN.fill(BLACK)
+        WIN.fill(WHITE)
 
         # Button
         play_btn.draw(WIN)

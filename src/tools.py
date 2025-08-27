@@ -1,35 +1,36 @@
 from .config import pg
 
 class Button:
-    def __init__(self, x, y, width, height, text="", font_size=24, text_color=(255, 255, 255),  color=(0, 122, 204), hover_color=(0, 150, 255), border_radius=12):
-        self.rect = pg.Rect(x, y, width, height)
+    def __init__(self, x, y, w, h, text, text_color, text_size, bg_color, border_color):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
         self.text = text
-        self.font = pg.font.Font(None, font_size)
         self.text_color = text_color
-        self.color = color
-        self.hover_color = hover_color
-        self.border_radius = border_radius
+        self.text_size = text_size
+        self.bg_color = bg_color
+        self.border_color = border_color
 
-    def draw(self, surface):
-        # Draw button with hover effect
-        # Detect mouse hover
-        mouse_pos = pg.mouse.get_pos()
-        is_hovered = self.rect.collidepoint(mouse_pos)
+        # Rect
+        self.rect = pg.Rect(self.x, self.y, self.w, self.h)
 
-        # Change color on hover
-        current_color = self.hover_color if is_hovered else self.color
+        # Text
+        self.font = pg.font.SysFont("arial", self.text_size)
+        self.txt = self.font.render(self.text, True, self.text_color)
+        self.txt_r = self.txt.get_rect(center = self.rect.center)
 
-        # Draw smooth rectangle with rounded edges
-        pg.draw.rect(surface, current_color, self.rect, border_radius=self.border_radius)
-
-        # Render and center text on button
-        text_surface = self.font.render(self.text, True, self.text_color)
-        text_rect = text_surface.get_rect(center=self.rect.center)
-        surface.blit(text_surface, text_rect)
-
-    def is_clicked(self, event):
-        # Return "True" if button is clicked
+    def is_clicked(self, event) -> bool:
+        # (True) if right click (False) if right click is not being clicked
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-            if self.rect.collidepoint(event.pos):
-                return True
-        return False
+            return True
+        elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
+            return False
+        
+    def draw(self, surf):
+        # Draw button and border
+        pg.draw.rect(surf, self.bg_color, self.rect)
+        pg.draw.rect(surf, self.border_color, self.rect, 2)
+
+        # Draw text
+        surf.blit(self.txt, self.txt_r)
