@@ -2,8 +2,8 @@ from .config import pg
 
 class Button:
     def __init__(self, x, y, w, h, text, text_color, text_size, bg_color, border_color, hover_color):
-        self.x = x
-        self.y = y
+        self.x = x - w // 2 # Center x for positioning 
+        self.y = y - w // 2 # Center y for positioning
         self.w = w
         self.h = h
         self.text = text
