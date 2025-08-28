@@ -1,7 +1,7 @@
 from .config import pg
 
 class Button:
-    def __init__(self, x, y, w, h, text, text_color, text_size, bg_color, border_color):
+    def __init__(self, x, y, w, h, text, text_color, text_size, bg_color, border_color, hover_color):
         self.x = x
         self.y = y
         self.w = w
@@ -11,6 +11,7 @@ class Button:
         self.text_size = text_size
         self.bg_color = bg_color
         self.border_color = border_color
+        self.hover_color = hover_color
 
         # Rect
         self.rect = pg.Rect(self.x, self.y, self.w, self.h)
@@ -31,6 +32,11 @@ class Button:
         # Draw button and border
         pg.draw.rect(surf, self.bg_color, self.rect)
         pg.draw.rect(surf, self.border_color, self.rect, 2)
+
+        # Hover effect, if mouse touches rect
+        mouse = pg.mouse.get_pos()
+        if self.rect.collidepoint(mouse):
+            pg.draw.rect(surf, self.hover_color, self.rect)
 
         # Draw text
         surf.blit(self.txt, self.txt_r)

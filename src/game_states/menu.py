@@ -6,7 +6,7 @@ from src.tools import Button
 # Main function 
 def main_menu():
     # Initialize
-    play_btn =Button(WID/2, HIT/2, 224, 124, "PLAY", BLACK, 44, WHITE, BLACK)
+    play_btn =Button(WID/2, HIT/2, 224, 124, "PLAY", BLACK, 44, WHITE, BLACK, GRAY)
 
     while True:
         for event in pg.event.get():
