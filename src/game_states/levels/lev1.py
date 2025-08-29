@@ -2,6 +2,8 @@ from src.config import pg, sys, WID, HIT, COLUMNS, ROWS, WHITE, WIN, CLOCK, FPS,
 from src.tools import draw_grid
 pg.init()
 
+
+
 def main_lev1():
     # Initialize
 

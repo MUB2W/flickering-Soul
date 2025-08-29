@@ -44,8 +44,6 @@ class Button:
         surf.blit(self.txt, self.txt_r)
 
 def draw_grid(surf, cols, rows, cell_size=40):
-    width, height = surf.get_size()
-    
     # Vertical lines
     for x in range(0, cols * cell_size, cell_size):
         pg.draw.line(surf, 'black', (x, 0), (x, rows * cell_size), 2)
@@ -53,3 +51,10 @@ def draw_grid(surf, cols, rows, cell_size=40):
     # Horizontal lines
     for y in range(0, rows * cell_size, cell_size):
         pg.draw.line(surf, 'black', (0, y), (cols * cell_size, y), 2)
+
+class MapCreator:
+    def __init__(self, surf, columns, rows, cell_size):
+        self.columns = surf.get_height() // cell_size # x
+        self.rows = surf.get_wdith() // cell_size # y
+        self.cell_size = cell_size
+

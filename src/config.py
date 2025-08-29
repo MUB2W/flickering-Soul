@@ -11,6 +11,7 @@ CELL_SIZE = 32
 ROWS = HIT // CELL_SIZE # y
 COLUMNS = WID // CELL_SIZE # x
 print(int(ROWS), int(COLUMNS))
+
 # Color
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
