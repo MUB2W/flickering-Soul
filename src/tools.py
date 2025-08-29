@@ -59,3 +59,18 @@ def map_reader(surf, rows, columns, map_data, cell_size):
 
             # Now set a number as a tile
             pass
+
+class Spritesheet:
+    def __init__(self, spritesheet_path, sprite_w, sprite_h):
+        self.sprtiesheet = pg.image.load(spritesheet_path).convert_alpha()
+        self.sprite_w = sprite_w
+        self.sprite_h = sprite_h
+
+    def get_img(self):
+        img = pg.Surface((self.sprite_w, self.sprite_h)).convert_alpha()
+
+        # Blit the image ontop of the spritesheet and tell pygame to only get a specific one 
+        img.blit(self.sprtiesheet, (0,0), (0, 0, self.sprite_w, self.sprite_h))
+
+        # give that img
+        return img
