@@ -52,9 +52,10 @@ def draw_grid(surf, cols, rows, cell_size=40):
     for y in range(0, rows * cell_size, cell_size):
         pg.draw.line(surf, 'black', (0, y), (cols * cell_size, y), 2)
 
-class MapCreator:
-    def __init__(self, surf, columns, rows, cell_size):
-        self.columns = surf.get_height() // cell_size # x
-        self.rows = surf.get_wdith() // cell_size # y
-        self.cell_size = cell_size
+def map_reader(surf, rows, columns, map_data, cell_size):
+    for y in range(rows):
+        for x in range(columns):
+            index = map_data[y * columns + x]
 
+            # Now set a number as a tile
+            pass
