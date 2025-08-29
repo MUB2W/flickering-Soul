@@ -1,7 +1,6 @@
-from src.config import WID, HIT, WIN, BLACK, WHITE, CLOCK, FPS, GRAY
-import pygame as pg
-import sys
+from src.config import WID, HIT, WIN, BLACK, WHITE, CLOCK, FPS, GRAY, pg, sys
 from src.tools import Button
+from .levels.lev1 import main_lev1
 
 # Main function 
 def main_menu():
@@ -16,7 +15,7 @@ def main_menu():
             
             # Change scene
             if play_btn.is_clicked(event):
-                pass
+                main_lev1()
             
         # Bg
         WIN.fill(WHITE)

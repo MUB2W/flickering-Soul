@@ -31,12 +31,25 @@ class Button:
     def draw(self, surf):
         # Draw button and border
         pg.draw.rect(surf, self.bg_color, self.rect)
-        pg.draw.rect(surf, self.border_color, self.rect, 2)
 
         # Hover effect, if mouse touches rect
         mouse = pg.mouse.get_pos()
         if self.rect.collidepoint(mouse):
             pg.draw.rect(surf, self.hover_color, self.rect)
+        
+        # Draw border
+        pg.draw.rect(surf, self.border_color, self.rect, 2)
 
         # Draw text
         surf.blit(self.txt, self.txt_r)
+
+def draw_grid(surf, cols, rows, cell_size=40):
+    width, height = surf.get_size()
+    
+    # Vertical lines
+    for x in range(0, cols * cell_size, cell_size):
+        pg.draw.line(surf, 'black', (x, 0), (x, rows * cell_size), 2)
+
+    # Horizontal lines
+    for y in range(0, rows * cell_size, cell_size):
+        pg.draw.line(surf, 'black', (0, y), (cols * cell_size, y), 2)
