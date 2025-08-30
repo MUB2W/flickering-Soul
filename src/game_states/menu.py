@@ -1,6 +1,6 @@
-from src.config import WID, HIT, WIN, BLACK, WHITE, CLOCK, FPS, GRAY, pg, sys
-from src.tools import Button
-from .levels.lev1 import main_lev1
+from src.essentials.config import WID, HIT, WIN, BLACK, WHITE, CLOCK, FPS, GRAY, pg, sys
+from src.essentials.tools import Button
+from src.levels.lev1 import main_lev1
 
 # Main function 
 def main_menu():

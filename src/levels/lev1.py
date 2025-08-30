@@ -1,5 +1,6 @@
-from src.config import pg, sys, WID, HIT, COLUMNS, ROWS, WHITE, WIN, CLOCK, FPS, CELL_SIZE
-from src.tools import draw_grid
+from src.essentials.config import pg, sys, WID, HIT, COLUMNS, ROWS, WHITE, WIN, CLOCK, FPS, CELL_SIZE
+from src.essentials.tools import draw_grid
+from src.enteties.player import Player
 pg.init()
 
 # map 
@@ -55,6 +56,7 @@ def map_reader(surf, rows, columns, map_data, cell_size):
 
 def main_lev1():
     # Initialize
+    player = Player(WID/2, HIT/2)
 
     while True:
         for event in pg.event.get():
@@ -70,6 +72,8 @@ def main_lev1():
 
         # map reader / tile palcer
         map_reader(WIN, ROWS, COLUMNS, lev1_map, CELL_SIZE)
+
+        player.draw(WIN)
 
         pg.display.update()
         CLOCK.tick(FPS)

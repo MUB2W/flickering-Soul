@@ -75,7 +75,7 @@ class Spritesheet:
         self.current_frame = 0
         self.current_animation = None # Used to track wat animation to play from the dic -> self.animation_list
 
-    def get_img(self, frame_x, frame_y=0):
+    def extract_frame(self, frame_x, frame_y=0):
         # use a surface a cut out for the spirte w, h
         img = pg.Surface((self.sprite_w, self.sprite_h)).convert_alpha()
 
@@ -94,7 +94,7 @@ class Spritesheet:
         # give that img 
         return img
     
-    def get_animation(self, name, row, number_of_frames):
+    def load_animation(self, name, row, number_of_frames):
         # Take  multiple frames from a row for a animation
         # Hold the frames in this list
         frames = []
@@ -103,13 +103,13 @@ class Spritesheet:
         for x in range(number_of_frames):
             # Using self.get_img(x, y) sense this is a for loop it dose it for number_of_fremase 
             # Then hold those frames insdie the frames list
-            frames.append(self.get_img(x, row))
+            frames.append(self.extract_frame(x, row))
         
         # store it inside animations dict so we can call it later by name
         self.animation_list[name] = frames
         return frames
 
-    def play_animation(self, name):
+    def animate(self, name):
         # If another name is given t
         if name != self.current_animation:
             self.current_animation = name

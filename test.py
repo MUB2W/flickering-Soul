@@ -1,5 +1,5 @@
 import pygame as pg, sys
-from src.tools import Spritesheet
+from essentials.tools import Spritesheet
 pg.init()
 
 # Window resolution
@@ -35,7 +35,7 @@ def main_test():
         WIN.fill(WHITE)
         frmaes = player_spritesheet.play_animation("idle")
         WIN.blit(frmaes, (WID/2, HIT/2))
-        
+
         pg.display.update()
         CLOCK.tick(FPS)
 
