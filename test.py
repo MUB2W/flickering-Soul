@@ -22,8 +22,8 @@ GRAY = (150,150,150)
 
 def main_test():
     # Initialize
-    player_spritesheet = Spritesheet("assets/player_spritesheet.png", 64, 64)
-    frame0 = player_spritesheet.get_img()
+    player_spritesheet = Spritesheet("assets/player_spritesheet.png", 64, 64, color=BLACK)
+    player_spritesheet.get_animation("idle", 0, 6)
 
     while True:
         for event in pg.event.get():
@@ -32,11 +32,10 @@ def main_test():
                 sys.exit()
 
         # Bg
-        WIN.fill(BLACK)
-
-        # Sprite 
-        WIN.blit(frame0 , (WID/2, HIT/2))
-
+        WIN.fill(WHITE)
+        frmaes = player_spritesheet.play_animation("idle")
+        WIN.blit(frmaes, (WID/2, HIT/2))
+        
         pg.display.update()
         CLOCK.tick(FPS)
 
