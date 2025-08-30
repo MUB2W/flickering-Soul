@@ -68,12 +68,11 @@ class Spritesheet:
         self.scale = scale
         self.color = color
 
-        # Hold the other animation list in this list
-        self.animation_list = {}
+        # Hold the other animation list in this dic
+        self.animation_list = []
         self.last_update = 0
         self.animation_delay = 250
         self.current_frame = 0
-        self.current_animation = None # Used to track wat animation to play from the dic -> self.animation_list
 
     def extract_frame(self, frame_x, frame_y=0):
         # use a surface a cut out for the spirte w, h
@@ -82,6 +81,10 @@ class Spritesheet:
         # Blit the image ontop of the spritesheet and tell pygame to only get a specific one 
         # use frame_w * sprite_w to get the x one for ex : 1 x 62 = x = 62 same for y
         img.blit(self.sprtiesheet, (0,0), (frame_x * self.sprite_w, frame_y  * self.sprite_h, self.sprite_w, self.sprite_h))
+       
+        # get tight bounding box of non-transparent pixels
+        bbox = img.get_bounding_rect()
+        img = img.subsurface(bbox).copy()  # crop the frame tightly
 
         # Resize by the scale amount if a scale was given
         if self.scale != 1:
@@ -94,36 +97,10 @@ class Spritesheet:
         # give that img 
         return img
     
-    def load_animation(self, name, row, number_of_frames):
-        # Take  multiple frames from a row for a animation
-        # Hold the frames in this list
-        frames = []
+    def make_animation(self, num_of_frames, row=0):
+        frames_list = []
+        for x in range(num_of_frames):
+            frame = self.extract_frame(x, row)
+            frames_list.append(frame)
 
-        # give the x as a number for ex 0, (1, 2, 3, 4) -> number_of_frames
-        for x in range(number_of_frames):
-            # Using self.get_img(x, y) sense this is a for loop it dose it for number_of_fremase 
-            # Then hold those frames insdie the frames list
-            frames.append(self.extract_frame(x, row))
-        
-        # store it inside animations dict so we can call it later by name
-        self.animation_list[name] = frames
-        return frames
-
-    def animate(self, name):
-        # If another name is given t
-        if name != self.current_animation:
-            self.current_animation = name
-            self.current_frame = 0
-            self.last_update = pg.time.get_ticks()
-
-        # Grap the frames for this animation
-        frames = self.animation_list[name]
-        current_time = pg.time.get_ticks()
-        
-        # Update the frame if enough time has passed
-        if current_time - self.last_update >= self.animation_delay:
-            self.current_frame = (self.current_frame + 1) % len(frames)
-            self.last_update = current_time
-
-        # give back the current frame img
-        return frames[self.current_frame]
+        return frames_list
