@@ -9,7 +9,7 @@ class Player:
         # vel
         self.vel = 5
 
-        # Sprite
+        # Sprite initialize
         self.player_spritesheet = Spritesheet("assets/player_spritesheet.png", 44, 61, 1.5, color=BLACK)
         self.idle_frames_list = self.player_spritesheet.make_animation(3, 0)
 
@@ -17,6 +17,7 @@ class Player:
         self.last_update = 0
         self.animation_delay = 250
         self.current_frame = 0
+        self.current_animation = self.idle_frames_list
 
         # Hitbox for controling where img is and collosion
         self.hitbox = pg.Rect(self.x, self.y, 24, 20)
@@ -31,12 +32,14 @@ class Player:
             self.hitbox.y -= self.vel
         if key[pg.K_s]:
             self.hitbox.y += self.vel
-
-    def idle_animation(self, surf):
+        else:
+            self.current_animation = self.idle_frames_list
+            
+    def animaiton_handler(self, surf):
         # loop through list of frames
         current_time = pg.time.get_ticks()
         if current_time - self.last_update >= self.animation_delay:
-            self.current_frame = (self.current_frame + 1) % len(self.idle_frames_list)
+            self.current_frame = (self.current_frame + 1) % len(self.current_animation)
             self.last_update = current_time
         
         rect = self.idle_frames_list[self.current_frame].get_rect(center = (self.hitbox.center))
