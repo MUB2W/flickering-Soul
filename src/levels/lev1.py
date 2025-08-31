@@ -74,7 +74,6 @@ def main_lev1():
         map_reader(WIN, ROWS, COLUMNS, lev1_map, CELL_SIZE)
 
         player.movement()
-        player.idle_animation(WIN)
         player.draw(WIN)
 
         pg.display.update()

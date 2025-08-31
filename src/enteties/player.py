@@ -1,4 +1,4 @@
-from src.essentials.config import pg, BLACK
+from src.essentials.config import pg, PINK
 from src.essentials.tools import Spritesheet
 
 class Player:
@@ -10,7 +10,7 @@ class Player:
         self.vel = 5
 
         # Sprite initialize
-        self.player_spritesheet = Spritesheet("assets/player_spritesheet.png", 44, 61, 1.5, color=BLACK)
+        self.player_spritesheet = Spritesheet("assets/player_spritesheet.png", 44, 61, 5, color=PINK)
         self.idle_frames_list = self.player_spritesheet.make_animation(3, 0)
 
         # animation 
@@ -34,16 +34,19 @@ class Player:
             self.hitbox.y += self.vel
         else:
             self.current_animation = self.idle_frames_list
+            self.animaiton_handler()
             
-    def animaiton_handler(self, surf):
+    def animaiton_handler(self):
         # loop through list of frames
         current_time = pg.time.get_ticks()
         if current_time - self.last_update >= self.animation_delay:
             self.current_frame = (self.current_frame + 1) % len(self.current_animation)
             self.last_update = current_time
         
-        rect = self.idle_frames_list[self.current_frame].get_rect(center = (self.hitbox.center))
-        surf.blit(self.idle_frames_list[self.current_frame], (rect.x, rect.y))
+        return self.current_frame
 
     def draw(self, surf):
+
+        rect = self.idle_frames_list[self.current_frame].get_rect(center = (self.hitbox.center))
+        surf.blit(self.idle_frames_list[self.current_frame], (rect.x, rect.y))
         pg.draw.rect(surf, 'red', self.hitbox, 1)
