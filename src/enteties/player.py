@@ -10,7 +10,7 @@ class Player:
         self.vel = 5
 
         # Sprite
-        self.player_spritesheet = Spritesheet("assets/player_spritesheet.png", 44, 61, 5, color=BLACK)
+        self.player_spritesheet = Spritesheet("assets/player_spritesheet.png", 44, 61, 1.5, color=BLACK)
         self.idle_frames_list = self.player_spritesheet.make_animation(3, 0)
 
         # animation 

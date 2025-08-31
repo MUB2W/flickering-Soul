@@ -86,7 +86,9 @@ class Spritesheet:
 
         # Resize by the scale amount if a scale was given
         if self.scale != 1:
-            img = pg.transform.scale(img, (self.sprite_w * self.scale, self.sprite_h * self.scale))
+            width = int(self.scale * self.sprite_w)
+            height = int(self.scale * self.sprite_h)
+            img = pg.transform.scale(img,( width, height))
 
         # remvoe bg color if given
         if self.color is not None:
