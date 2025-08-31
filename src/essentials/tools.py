@@ -24,9 +24,11 @@ class Button:
     def is_clicked(self, event) -> bool:
         # (True) if right click (False) if right click is not being clicked
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-            return True
+            if self.rect.collidepoint(event.pos):
+                return True
         elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-            return False
+            if self.rect.collidepoint(event.pos):
+                return False
         
     def draw(self, surf):
         # Draw button and border
@@ -81,10 +83,6 @@ class Spritesheet:
         # Blit the image ontop of the spritesheet and tell pygame to only get a specific one 
         # use frame_w * sprite_w to get the x one for ex : 1 x 62 = x = 62 same for y
         img.blit(self.sprtiesheet, (0,0), (frame_x * self.sprite_w, frame_y  * self.sprite_h, self.sprite_w, self.sprite_h))
-       
-        # get tight bounding box of non-transparent pixels
-        bbox = img.get_bounding_rect()
-        img = img.subsurface(bbox).copy()  # crop the frame tightly
 
         # Resize by the scale amount if a scale was given
         if self.scale != 1:
@@ -100,7 +98,6 @@ class Spritesheet:
     def make_animation(self, num_of_frames, row=0):
         frames_list = []
         for x in range(num_of_frames):
-            frame = self.extract_frame(x, row)
-            frames_list.append(frame)
+            frames_list.append(self.extract_frame(x, row))
 
         return frames_list
