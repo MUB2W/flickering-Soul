@@ -1,5 +1,5 @@
 import pygame as pg, sys
-from essentials.tools import Spritesheet
+from src.essentials.tools import FadingRect
 pg.init()
 
 # Window resolution
@@ -21,9 +21,8 @@ GRAY = (150,150,150)
 
 
 def main_test():
-    # Initialize
-    player_spritesheet = Spritesheet("assets/player_spritesheet.png", 64, 64, color=BLACK)
-    player_spritesheet.get_animation("idle", 0, 6)
+    # Create a fading rectangle (example: red box, fades by 5 every 50ms)
+    fade_rect = FadingRect((0,0, WID, HIT), BLACK, fade_by=3, delay=50)
 
     while True:
         for event in pg.event.get():
@@ -31,10 +30,15 @@ def main_test():
                 pg.quit()
                 sys.exit()
 
-        # Bg
+        # Background
         WIN.fill(WHITE)
-        frmaes = player_spritesheet.play_animation("idle")
-        WIN.blit(frmaes, (WID/2, HIT/2))
+
+        # Draw fading rectangle
+        fade_rect.draw(WIN)
+
+        # Optional: check when fade is done
+        if fade_rect.is_done():
+            print("Fade finished!")
 
         pg.display.update()
         CLOCK.tick(FPS)

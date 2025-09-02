@@ -98,8 +98,43 @@ class Spritesheet:
         return img
     
     def make_animation(self, num_of_frames, row=0):
+        # Make a list that holds the frames inside of it
         frames_list = []
+
+        # give 0,1,2,3, etc based on num_of_frames
         for x in range(num_of_frames):
+
+            # In extract frame it needs the x of the spritesheet and the row x is the 0,1,2,3,4 etc and row is u can give manualy
             frames_list.append(self.extract_frame(x, row))
 
+        # give back the list
         return frames_list
+
+# Used after a level is reached to start the scene
+class FadingRect:
+    def __init__(self, rect, color, fade_by=5, delay=50):
+        self.rect = pg.Rect(rect)
+        self.base_color = color
+        self.opacity = 255
+        self.fade_by = fade_by
+        self.delay = delay
+        self.last_updated = pg.time.get_ticks()
+
+        # Surface for drawing with alpha
+        self.surface = pg.Surface(self.rect.size, pg.SRCALPHA) # RCALPHA supposets / makes alpha possible
+
+    def is_done(self):
+        if self.opacity <= 0:
+            return True
+
+    def update(self):
+        current_time = pg.time.get_ticks()
+        if current_time - self.last_updated >= self.delay:
+            self.opacity = max(0, self.opacity - self.fade_by)  # clamp at 0
+            self.last_updated = current_time
+
+    def draw(self, target_surf):
+        self.update()
+        self.surface.fill((0, 0, 0, 0))  # clear with transparent
+        pg.draw.rect(self.surface, (*self.base_color, self.opacity), self.surface.get_rect())
+        target_surf.blit(self.surface, self.rect.topleft)
