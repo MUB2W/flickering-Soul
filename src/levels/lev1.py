@@ -1,5 +1,5 @@
-from src.essentials.config import pg, sys, WID, HIT, COLUMNS, ROWS, WHITE, WIN, CLOCK, FPS, CELL_SIZE
-from src.essentials.tools import draw_grid
+from src.essentials.config import pg, sys, WID, HIT, COLUMNS, ROWS, WHITE, WIN, CLOCK, FPS, CELL_SIZE, BLACK
+from src.essentials.tools import draw_grid, FadingRect
 from src.enteties.player import Player
 pg.init()
 
@@ -57,6 +57,7 @@ def map_reader(surf, rows, columns, map_data, cell_size):
 def main_lev1():
     # Initialize
     player = Player(WID/2, HIT/2)
+    fading_rect = FadingRect((0, 0, WID, HIT), BLACK, fade_by=5, delay=50)  # full-screen fade
 
     while True:
         for event in pg.event.get():
@@ -70,14 +71,21 @@ def main_lev1():
         # Grid
         draw_grid(WIN, COLUMNS, ROWS, CELL_SIZE)
 
-        # map reader / tile palcer
+        # Map reader / tile placer
         map_reader(WIN, ROWS, COLUMNS, lev1_map, CELL_SIZE)
 
+        # Player
         player.movement()
         player.draw(WIN)
 
+        # Fading rectangle overlay
+        fading_rect.draw(WIN)
+        if fading_rect.is_done():
+            print("Fade complete!")  # Or trigger next state/scene
+
         pg.display.update()
         CLOCK.tick(FPS)
+
 
 if __name__ == "__main__":
     main_lev1()

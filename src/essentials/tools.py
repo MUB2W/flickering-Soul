@@ -133,8 +133,8 @@ class FadingRect:
             self.opacity = max(0, self.opacity - self.fade_by)  # clamp at 0
             self.last_updated = current_time
 
-    def draw(self, target_surf):
+    def draw(self, surf):
         self.update()
         self.surface.fill((0, 0, 0, 0))  # clear with transparent
         pg.draw.rect(self.surface, (*self.base_color, self.opacity), self.surface.get_rect())
-        target_surf.blit(self.surface, self.rect.topleft)
+        surf.blit(self.surface, self.rect.topleft)
