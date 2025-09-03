@@ -51,14 +51,23 @@ class GridDrawer:
         self.rows = rows
         self.cell_size = cell_size
 
-    def draw(self, surf):
-        # Vertical lines
-        for x in range(0, self.cols * self.cell_size, self.cell_size):
-            pg.draw.line(surf, 'black', (x, 0), (x, self.rows * self.cell_size), 2)
+        # Toggle grid visability
+        self.grid_draw = False
 
-        # Horizontal lines
-        for y in range(0, self.rows * self.cell_size, self.cell_size):
-            pg.draw.line(surf, 'black', (0, y), (self.cols * self.cell_size, y), 2)
+    def handle_event(self, event):
+        # Check for g in the event loop if true or false determins the true or false of self.grid_draw
+        if event.type == pg.KEYDOWN and event.key == pg.K_g:
+            self.grid_draw = not self.grid_draw
+
+    def draw(self, surf):
+        if self.grid_draw:
+            # Vertical lines
+            for x in range(0, self.cols * self.cell_size, self.cell_size):
+                pg.draw.line(surf, 'black', (x, 0), (x, self.rows * self.cell_size), 2)
+
+            # Horizontal lines
+            for y in range(0, self.rows * self.cell_size, self.cell_size):
+                pg.draw.line(surf, 'black', (0, y), (self.cols * self.cell_size, y), 2)
 
 class MapRenderer:
     def __init__(self, tile_surfaces):

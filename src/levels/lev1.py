@@ -64,6 +64,9 @@ def main_lev1():
                 pg.quit()
                 sys.exit()
 
+            # Toggle grid
+            grid_drawer.handle_event(event)
+            
         # Bg
         WIN.fill(WHITE)
 
