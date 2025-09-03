@@ -45,22 +45,32 @@ class Button:
         # Draw text
         surf.blit(self.txt, self.txt_r)
 
-def draw_grid(surf, cols, rows, cell_size=40):
-    # Vertical lines
-    for x in range(0, cols * cell_size, cell_size):
-        pg.draw.line(surf, 'black', (x, 0), (x, rows * cell_size), 2)
+class GridDrawer:
+    def __init__(self, cols, rows, cell_size=40):
+        self.cols = cols
+        self.rows = rows
+        self.cell_size = cell_size
 
-    # Horizontal lines
-    for y in range(0, rows * cell_size, cell_size):
-        pg.draw.line(surf, 'black', (0, y), (cols * cell_size, y), 2)
+    def draw(self, surf):
+        # Vertical lines
+        for x in range(0, self.cols * self.cell_size, self.cell_size):
+            pg.draw.line(surf, 'black', (x, 0), (x, self.rows * self.cell_size), 2)
 
-def map_reader(surf, rows, columns, map_data, cell_size):
-    for y in range(rows):
-        for x in range(columns):
-            index = map_data[y * columns + x]
+        # Horizontal lines
+        for y in range(0, self.rows * self.cell_size, self.cell_size):
+            pg.draw.line(surf, 'black', (0, y), (self.cols * self.cell_size, y), 2)
 
-            # Now set a number as a tile
-            pass
+class MapRenderer:
+    def __init__(self, tile_surfaces):
+        self.tile_surfaces = tile_surfaces  # list of surfaces, e.g. [None, ground1, red_tile]
+
+    def render(self, surf, rows, columns, map_data, cell_size):
+        for y in range(rows):
+            for x in range(columns):
+                index = map_data[y * columns + x]
+                pos = (x * cell_size, y * cell_size)
+                if index > 0 and index < len(self.tile_surfaces) and self.tile_surfaces[index]:
+                    surf.blit(self.tile_surfaces[index], pos)
 
 class Spritesheet:
     def __init__(self, spritesheet_path, sprite_w, sprite_h, scale=1, color=None):
@@ -138,3 +148,4 @@ class FadingRect:
         self.surface.fill((0, 0, 0, 0))  # clear with transparent
         pg.draw.rect(self.surface, (*self.base_color, self.opacity), self.surface.get_rect())
         surf.blit(self.surface, self.rect.topleft)
+
