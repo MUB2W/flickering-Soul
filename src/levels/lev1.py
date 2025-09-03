@@ -50,6 +50,7 @@ ground1 = pg.transform.scale(pg.image.load("assets/tiles/ground1.png"), (CELL_SI
 
 # Create tile surfaces
 tile_surfaces = [None, ground1] # None = 0 ground1 = 1 etc
+solid_tiles = [1]
 
 def main_lev1():
     # Initialize
@@ -66,7 +67,7 @@ def main_lev1():
 
             # Toggle grid
             grid_drawer.handle_event(event)
-            
+
         # Bg
         WIN.fill(WHITE)
 
@@ -77,7 +78,8 @@ def main_lev1():
         level_1_renderer.render(WIN, ROWS, COLUMNS, lev1_map, CELL_SIZE)
 
         # Player
-        player.movement()
+        player.apply_gravity()
+        player.collision(level_1_renderer.give_index, solid_tiles, ROWS, COLUMNS)
         player.draw(WIN)
 
         # Fading rectangle overlay

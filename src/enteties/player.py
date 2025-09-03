@@ -22,6 +22,9 @@ class Player:
         # Hitbox for controling where img is and collosion
         self.hitbox = pg.Rect(self.x, self.y, 25, 57)
 
+        # Gravity 
+        self.gravity = 10
+
     def movement(self):
         # velocity components used for checking when player is moving or nto
         dx, dy = 0, 0
@@ -54,18 +57,37 @@ class Player:
             self.current_animation = self.idle_frames_list
 
     def animaiton_handler(self):
-        # loop through list of frames
+        # loop through list of frames 
         current_time = pg.time.get_ticks()
         if current_time - self.last_update >= self.animation_delay:
+            # find the current_frame / index and keep adding 1 index to animation list and loop if it reaches the end
             self.current_frame = (self.current_frame + 1) % len(self.current_animation)
             self.last_update = current_time
+
+        # give it so can use it for animation
         return self.current_frame 
+
+    def apply_gravity(self):
+        self.hitbox.y += self.gravity
+
+        if self.hitbox.bottom >= HIT:
+            self.hitbox.bottom = HIT
+
+    def collision(self, tile_index, solid_tiles, rows, columns):
+        # Loop through each row, columns
+        for y in range(rows):
+            for x in range(columns):
+                
+                # Check if player is toucheing the index inside the solid_tiles
+                # Ex index 
+                if self.hitbox in tile_index:
+                    print(f"collision with {tile_index}, at {self.hitbox.x, self.hitbox.y}")
 
     def draw(self, surf):
         # Get the wat number should the frame be
         self.animaiton_handler()
         
-        # USe the index / self.current_frame  to make a surface
+        # Use the index / self.current_frame  to make a surface
         # Get the rect of that surface and center it to hibox for collision and moving
         frame = self.current_animation[self.current_frame]
         rect = frame.get_rect(topright = self.hitbox.topright)

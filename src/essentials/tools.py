@@ -87,6 +87,19 @@ class MapRenderer:
                 if index > 0 and index < len(self.tile_surfaces) and self.tile_surfaces[index]:
                     # Draw the tile image onto the surface at the calculated position
                     surf.blit(self.tile_surfaces[index], pos)
+    
+    def give_index(self, surf, rows, columns, map_data, cell_size):
+        # Loop through each row, columns
+        for y in range(rows):
+            for x in range(columns):
+                # Convert 2D grid position into a 1D list index
+                index = map_data[y * columns + x]
+
+                # Calculate the pixel position on the surface (top-left corner of cell)
+                pos = (x * cell_size, y * cell_size)
+
+        return index
+
 class Spritesheet:
     def __init__(self, spritesheet_path, sprite_w, sprite_h, scale=1, color=None):
         self.sprtiesheet = pg.image.load(spritesheet_path).convert_alpha()
