@@ -1,5 +1,5 @@
 from src.essentials.config import pg, sys, WID, HIT, COLUMNS, ROWS, WHITE, WIN, CLOCK, FPS, CELL_SIZE, BLACK
-from src.essentials.tools import GridDrawer, MapRenderer, FadingRect
+from src.essentials.tools import GridDrawer, MapRenderer, FadingRect, ScenePlayer
 from src.enteties.player import Player
 pg.init()
 
@@ -52,12 +52,19 @@ ground1 = pg.transform.scale(pg.image.load("assets/tiles/ground1.png"), (CELL_SI
 tile_surfaces = [None, ground1] # None = 0 ground1 = 1 etc
 solid_tiles = [1]
 
+
+
+
 def main_lev1():
     # Initialize
     player = Player(WID/2, HIT/2)
     fading_rect = FadingRect((0, 0, WID, HIT), BLACK, fade_by=5, delay=50)  # full-screen fade
     grid_drawer = GridDrawer(COLUMNS, ROWS, CELL_SIZE)
     level_1_renderer = MapRenderer(tile_surfaces)
+    openning_scene = ScenePlayer("assets/scenes/untitiled_soul_opening.gif", 0, 0, WID, HIT)
+    
+    # Start the scene
+    openning_scene.play()
 
     while True:
         for event in pg.event.get():
@@ -65,26 +72,25 @@ def main_lev1():
                 pg.quit()
                 sys.exit()
 
-            # Toggle grid
             grid_drawer.handle_event(event)
 
-        # Bg
         WIN.fill(WHITE)
 
-        # Grid
-        grid_drawer.draw(WIN)
+        # If scene not finished yet
+        if not openning_scene.is_done():
+            openning_scene.update(loop=False)  # don't loop → end naturally
+            openning_scene.draw(WIN)
+        else:
+            # Scene is done → now show game stuff
+            grid_drawer.draw(WIN)
+            level_1_renderer.render(WIN, ROWS, COLUMNS, lev1_map, CELL_SIZE)
 
-        # Map reader / tile placer
-        level_1_renderer.render(WIN, ROWS, COLUMNS, lev1_map, CELL_SIZE)
+            player.apply_gravity()
+            player.collision(level_1_renderer.give_index, solid_tiles, ROWS, COLUMNS)
+            player.draw(WIN)
 
-        # Player
-        player.apply_gravity()
-        player.collision(level_1_renderer.give_index, solid_tiles, ROWS, COLUMNS)
-        player.draw(WIN)
-
-        # Fading rectangle overlay
-        fading_rect.draw(WIN)
-
+            # Fading overlay
+            fading_rect.draw(WIN)
 
         pg.display.update()
         CLOCK.tick(FPS)

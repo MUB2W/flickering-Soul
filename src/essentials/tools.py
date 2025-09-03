@@ -1,4 +1,4 @@
-from .config import pg
+from .config import pg, Image
 
 class Button:
     def __init__(self, x, y, w, h, text, text_color, text_size, bg_color, border_color, hover_color):
@@ -176,4 +176,82 @@ class FadingRect:
         self.surface.fill((0, 0, 0, 0))  # clear with transparent
         pg.draw.rect(self.surface, (*self.base_color, self.opacity), self.surface.get_rect())
         surf.blit(self.surface, self.rect.topleft)
+import pygame as pg
+from PIL import Image
 
+
+class ScenePlayer:
+    def __init__(self, scene_path, x, y, w, h):
+        # Position and size
+        self.scene_path = scene_path
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+        # Load frames
+        self.frames = self.load_gif(scene_path)
+        self.frame_count = len(self.frames)
+        self.current_frame = 0
+        self.playing = False
+
+        # Timing
+        self.last_update = pg.time.get_ticks()
+        self.frame_delay = 100  # ms per frame
+
+        # Track completion
+        self.done = False
+
+    def load_gif(self, path):
+        pil_img = Image.open(path)
+        frames = []
+
+        try:
+            while True:
+                frame = pil_img.copy().convert("RGBA")
+                mode = frame.mode
+                size = frame.size
+                data = frame.tobytes()
+
+                pg_img = pg.image.fromstring(data, size, mode)
+                pg_img = pg.transform.scale(pg_img, (self.w, self.h))
+                frames.append(pg_img)
+
+                pil_img.seek(pil_img.tell() + 1)
+        except EOFError:
+            pass
+
+        return frames
+
+    def update(self, loop=True):
+        if self.playing and self.frame_count > 1:
+            now = pg.time.get_ticks()
+            if now - self.last_update > self.frame_delay:
+                self.last_update = now
+
+                if loop:
+                    self.current_frame = (self.current_frame + 1) % self.frame_count
+                else:
+                    if self.current_frame < self.frame_count - 1:
+                        self.current_frame += 1
+                    else:
+                        self.done = True
+                        self.playing = False
+
+    def draw(self, surface):
+        if self.frames:
+            surface.blit(self.frames[self.current_frame], (self.x, self.y))
+
+    def play(self):
+        self.playing = True
+        self.done = False
+
+    def pause(self):
+        self.playing = False
+
+    def reset(self):
+        self.current_frame = 0
+        self.done = False
+
+    def is_done(self):
+        return self.done

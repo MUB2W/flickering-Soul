@@ -1,4 +1,5 @@
 import pygame as pg, sys
+from PIL import Image
 pg.init()
 
 # Window resolution
