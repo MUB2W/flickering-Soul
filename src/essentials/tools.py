@@ -199,16 +199,6 @@ class FadingRect:
         self.surface.fill((0, 0, 0, 0))  # clear with transparent
         pg.draw.rect(self.surface, (*self.base_color, self.opacity), self.surface.get_rect())
         surf.blit(self.surface, self.rect.topleft)
-import pygame as pg
-from PIL import Image
-import os
-try:
-    from moviepy.editor import VideoFileClip
-    import numpy as np
-    MOVIEPY_AVAILABLE = True
-except ImportError:
-    MOVIEPY_AVAILABLE = False
-
 
 class ScenePlayer:
     def __init__(self, scene_path, x, y, w, h):
