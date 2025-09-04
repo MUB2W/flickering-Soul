@@ -100,6 +100,29 @@ class MapRenderer:
 
         return index
 
+    def get_solid_rects(self, rows, columns, map_data, cell_size, solid_tiles):
+        # List to hold rects of solid tiles
+        solid_rects = []
+
+        # Loop through each row, columns
+        for y in range(rows):
+            for x in range(columns):
+                # Convert 2D grid position into a 1D list index
+                index = map_data[y * columns + x]
+
+                # If this tile is solid
+                if index in solid_tiles:
+                    # Calculate the pixel position on the surface (top-left corner of cell)
+                    pos = (x * cell_size, y * cell_size)
+
+                    # Create rect for this tile
+                    tile_rect = pg.Rect(pos[0], pos[1], cell_size, cell_size)
+
+                    # Add to list
+                    solid_rects.append(tile_rect)
+
+        return solid_rects
+
 class Spritesheet:
     def __init__(self, spritesheet_path, sprite_w, sprite_h, scale=1, color=None):
         self.sprtiesheet = pg.image.load(spritesheet_path).convert_alpha()
@@ -178,6 +201,13 @@ class FadingRect:
         surf.blit(self.surface, self.rect.topleft)
 import pygame as pg
 from PIL import Image
+import os
+try:
+    from moviepy.editor import VideoFileClip
+    import numpy as np
+    MOVIEPY_AVAILABLE = True
+except ImportError:
+    MOVIEPY_AVAILABLE = False
 
 
 class ScenePlayer:
@@ -189,15 +219,23 @@ class ScenePlayer:
         self.w = w
         self.h = h
 
-        # Load frames
-        self.frames = self.load_gif(scene_path)
+        # Detect file type and load frames
+        ext = os.path.splitext(scene_path)[1].lower()
+        if ext == '.gif':
+            self.frames = self.load_gif(scene_path)
+            self.frame_delay = 100  # ms per frame
+        elif ext == '.mp4':
+            self.frames = self.load_mp4(scene_path)
+            self.frame_delay = 1000 / self.fps if self.fps else 100
+        else:
+            raise ValueError(f"Unsupported file format: {ext}. Supported: .gif, .mp4")
+
         self.frame_count = len(self.frames)
         self.current_frame = 0
         self.playing = False
 
         # Timing
         self.last_update = pg.time.get_ticks()
-        self.frame_delay = 100  # ms per frame
 
         # Track completion
         self.done = False
@@ -221,6 +259,44 @@ class ScenePlayer:
         except EOFError:
             pass
 
+        return frames
+
+    def load_mp4(self, path):
+        # check if moviepy is available
+        if not MOVIEPY_AVAILABLE:
+            raise ImportError("moviepy is required for MP4 support. Install with: pip install moviepy")
+
+        # load the video clip
+        clip = VideoFileClip(path)
+
+        # set fps
+        self.fps = clip.fps
+
+        # list to hold frames
+        frames = []
+
+        # loop through each frame
+        for frame in clip.iter_frames():
+            # frame is numpy array (height, width, 3) or 4
+            if frame.shape[2] == 4:
+                frame = frame[:, :, :3]  # remove alpha if present
+
+            # transpose to (width, height, 3) for pygame
+            frame = np.transpose(frame, (1, 0, 2))
+
+            # create pygame surface
+            surf = pg.image.frombuffer(frame.tobytes(), (frame.shape[0], frame.shape[1]), 'RGB')
+
+            # scale to the desired size
+            surf = pg.transform.scale(surf, (self.w, self.h))
+
+            # add to frames
+            frames.append(surf)
+
+        # close the clip
+        clip.close()
+
+        # return the frames
         return frames
 
     def update(self, loop=True):

@@ -61,7 +61,7 @@ def main_lev1():
     fading_rect = FadingRect((0, 0, WID, HIT), BLACK, fade_by=5, delay=50)  # full-screen fade
     grid_drawer = GridDrawer(COLUMNS, ROWS, CELL_SIZE)
     level_1_renderer = MapRenderer(tile_surfaces)
-    openning_scene = ScenePlayer("assets/scenes/untitiled_soul_opening.gif", 0, 0, WID, HIT)
+    openning_scene = ScenePlayer("assets/scenes/untitled_soul_opening.gif", 0, 0, WID, HIT)
     
     # Start the scene
     openning_scene.play()
@@ -85,8 +85,12 @@ def main_lev1():
             grid_drawer.draw(WIN)
             level_1_renderer.render(WIN, ROWS, COLUMNS, lev1_map, CELL_SIZE)
 
-            player.apply_gravity()
-            player.collision(level_1_renderer.give_index, solid_tiles, ROWS, COLUMNS)
+            # Get solid rects for collision
+            solid_rects = level_1_renderer.get_solid_rects(ROWS, COLUMNS, lev1_map, CELL_SIZE, solid_tiles)
+
+            player.apply_gravity(solid_rects)
+            player.movement(solid_rects)
+            player.collision(solid_rects)
             player.draw(WIN)
 
             # Fading overlay
