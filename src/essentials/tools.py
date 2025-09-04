@@ -1,4 +1,4 @@
-from .config import pg, Image
+from .config import pg, Image, os
 
 class Button:
     def __init__(self, x, y, w, h, text, text_color, text_size, bg_color, border_color, hover_color):

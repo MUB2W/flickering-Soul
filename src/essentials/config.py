@@ -1,5 +1,7 @@
 import pygame as pg, sys
 from PIL import Image
+import os 
+
 pg.init()
 
 # Window resolution
