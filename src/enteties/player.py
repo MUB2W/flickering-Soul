@@ -1,5 +1,5 @@
-from src.essentials.config import pg, PINK, WID, HIT
-from src.essentials.tools import Spritesheet
+from src.essentials import *
+from src.enteties import player_spritesheet
 
 class Player:
     def __init__(self, x, y):
@@ -10,7 +10,7 @@ class Player:
         self.vel = 5
 
         # Sprite initialize
-        self.player_spritesheet = Spritesheet("assets/player_spritesheet_idle.png", 44, 61, color=PINK)
+        self.player_spritesheet = player_spritesheet
         self.idle_frames_list = self.player_spritesheet.make_animation(3, 0)
 
         # animation 

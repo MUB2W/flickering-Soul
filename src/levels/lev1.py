@@ -1,5 +1,4 @@
-from src.essentials.config import pg, sys, WID, HIT, COLUMNS, ROWS, WHITE, WIN, CLOCK, FPS, CELL_SIZE, BLACK
-from src.essentials.tools import GridDrawer, MapRenderer, FadingRect, ScenePlayer
+from src.essentials import *
 from src.enteties.player import Player
 pg.init()
 
@@ -45,9 +44,6 @@ lev1_map = [
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ]
 
-# Load the tiles that are used in this level after put in tile_surfaces -> Maprenderer
-ground1 = pg.transform.scale(pg.image.load("assets/tiles/ground1.png"), (CELL_SIZE, CELL_SIZE)).convert_alpha()
-
 # Create tile surfaces
 tile_surfaces = [None, ground1] # None = 0 ground1 = 1 etc
 solid_tiles = [1]
@@ -59,7 +55,7 @@ def main_lev1():
     fading_rect = FadingRect((0, 0, WID, HIT), BLACK, fade_by=5, delay=50)  # full-screen fade
     grid_drawer = GridDrawer(COLUMNS, ROWS, CELL_SIZE)
     level_1_renderer = MapRenderer(tile_surfaces)
-    openning_scene = ScenePlayer("assets/scenes/untitled_soul_opening.gif", 0, 0, WID, HIT)
+    # use opening_scene from essentials
     
     # Start the scene
     #openning_scene.play()
