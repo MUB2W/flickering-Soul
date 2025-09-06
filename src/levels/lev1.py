@@ -62,7 +62,7 @@ def main_lev1():
     openning_scene = ScenePlayer("assets/scenes/untitled_soul_opening.gif", 0, 0, WID, HIT)
     
     # Start the scene
-    openning_scene.play()
+    #openning_scene.play()
 
     while True:
         for event in pg.event.get():
@@ -75,9 +75,10 @@ def main_lev1():
         WIN.fill(WHITE)
 
         # If scene not finished yet
-        if not openning_scene.is_done():
-            openning_scene.update(loop=False)  # don't loop → end naturally
-            openning_scene.draw(WIN)
+        if None: #not openning_scene.is_done():
+            #openning_scene.update(loop=False)  # don't loop → end naturally
+            #openning_scene.draw(WIN)
+            pass
         else:
             # Scene is done → now show game stuff
             grid_drawer.draw(WIN)
