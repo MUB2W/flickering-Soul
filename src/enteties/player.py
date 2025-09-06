@@ -23,15 +23,13 @@ class Player:
         self.hitbox = pg.Rect(self.x, self.y, 25, 57)
 
         # Gravity
-        self.gravity = 10
-
-        # Collision flags
+        self.vel_y = 0        # vertical velocity
+        self.gravity = 1      # pull force
+        self.jump_h = -15     # jump height
         self.on_ground = False
 
-        # Jump 
+        # Collision flags
         self.jumping = False
-        self.y_vel = 0
-        self.jump_h = -25
 
     def movement(self, solid_rects):
         # velocity components used for checking when player is moving or nto
@@ -50,8 +48,8 @@ class Player:
         if key[pg.K_s] and self.hitbox.y <= HIT - self.hitbox.height:
             dy += 1
             #self.current_animation = None
-        if key[pg.K_SPACE] and self.on_ground:
-            self.jump()
+        if key[pg.K_SPACE]:
+            self.jump()  # jump logic here
 
         # Normalize diagonal movement
         if dx != 0 and dy != 0:
@@ -68,7 +66,7 @@ class Player:
                 dx = 0
                 break
 
-        # Check vertical collisions
+        # Check vertical collisions (manual up/down keys)
         for tile_rect in solid_rects:
             if new_hitbox_y.colliderect(tile_rect):
                 dy = 0
@@ -79,8 +77,44 @@ class Player:
         self.hitbox.y += dy * self.vel
 
         # No moving / no vel paly idle animation
-        if dx == 0 and dy == 0:
+        if dx == 0 and dy == 0 and self.on_ground:
             self.current_animation = self.idle_frames_list
+
+    def jump(self):
+        # only jump if on ground
+        if self.on_ground:
+            self.jumping = True
+            self.vel_y = self.jump_h
+            self.on_ground = False
+
+    def apply_gravity(self, solid_rects):
+        # add gravity each frame
+        self.vel_y += self.gravity
+        self.hitbox.y += self.vel_y
+
+        # reset ground state
+        self.on_ground = False
+
+        # check for collision with tiles
+        for tile_rect in solid_rects:
+            if self.hitbox.colliderect(tile_rect):
+                if self.vel_y > 0:  # falling down
+                    self.hitbox.bottom = tile_rect.top
+                    self.vel_y = 0
+                    self.on_ground = True
+
+        # stop at bottom of screen
+        if self.hitbox.bottom >= HIT:
+            self.hitbox.bottom = HIT
+            self.vel_y = 0
+            self.on_ground = True
+
+    def collision(self, solid_rects):
+        # Check for collision with solid tiles
+        for tile_rect in solid_rects:
+            if self.hitbox.colliderect(tile_rect):
+                # Handle collision - for now just print
+                print(f"Collision with tile at {tile_rect.x, tile_rect.y}")
 
     def animaiton_handler(self):
         # loop through list of frames 
@@ -92,53 +126,6 @@ class Player:
 
         # give it so can use it for animation
         return self.current_frame 
-
-    def apply_gravity(self, solid_rects):
-        # apply gravity
-        self.y_vel += 1
-        if self.y_vel > self.gravity:
-            self.y_vel = self.gravity
-
-        # Move by verticle vel
-        self.hitbox.y += self.y_vel
-
-        # Reset on_ground flag
-        self.on_ground = False
-
-        # Calculate new position after gravity
-        new_hitbox = self.hitbox.move(0, self.gravity)
-
-        # Check for collision with solid tiles below
-        for tile_rect in solid_rects:
-            if new_hitbox.colliderect(tile_rect):
-                if self.y_vel > 0:  # falling
-                    self.hitbox.bottom = tile_rect.top
-                    self.on_ground = True
-                    self.y_vel = 0
-                elif self.y_vel < 0:  # jumping up and hitting head
-                    self.hitbox.top = tile_rect.bottom
-                    self.y_vel = 0
-
-        # Apply gravity if no collision
-        self.hitbox.y += self.gravity
-
-        # Check screen bottom
-        if self.hitbox.bottom >= HIT:
-            self.hitbox.bottom = HIT
-            self.on_ground = True
-
-    def collision(self, solid_rects):
-        # Check for collision with solid tiles
-        for tile_rect in solid_rects:
-            if self.hitbox.colliderect(tile_rect):
-                # Handle collision - for now just print
-                print(f"Collision with tile at {tile_rect.x, tile_rect.y}")
-
-    def jump(self):
-        if self.on_ground:
-            self.jumping = True
-            self.y_vel += self.jump_h
-            self.on_ground = False
 
     def draw(self, surf):
         # Get the wat number should the frame be
@@ -154,4 +141,4 @@ class Player:
 
         # debug draw hitboxes
         pg.draw.rect(surf, 'yellow', rect, 1)
-        pg.draw.rect(surf, 'red', self.hitbox, 1) 
+        pg.draw.rect(surf, 'red', self.hitbox, 1)
