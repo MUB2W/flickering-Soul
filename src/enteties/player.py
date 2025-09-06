@@ -23,9 +23,9 @@ class Player:
         self.hitbox = pg.Rect(self.x, self.y, 25, 57)
 
         # Gravity
-        self.vel_y = 0        # vertical velocity
-        self.gravity = 1      # pull force
-        self.jump_h = -15     # jump height
+        self.vel_y = 0
+        self.gravity = 1
+        self.jump_h = -15
         self.on_ground = False
 
         # Collision flags
